@@ -12,6 +12,7 @@
     "cypress": "^14.0.1"
   },
   "dependencies": {
+    "bootstrap": "^5.3.3",
     "pokedex": "file:"
   }
 }
