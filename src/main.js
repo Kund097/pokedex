@@ -157,6 +157,40 @@ async function insertPokemonData(pokemon) {
     handlePokemonImg($pokeCard, pokemon);
     document.querySelector(".modal-title").textContent = pokemon.name;
     insertPokemonEntries($pokeCard, await getPokemonEntry(pokemon.id));
+    insertPokemonInformation($pokeCard, pokemon);
+}
+
+function insertPokemonInformation($pokeCard, pokemon) {
+    const height = formatHeight(pokemon.height);
+    const weight = formatWeight(pokemon.weight);
+
+    $pokeCard.querySelector(
+        ".height"
+    ).innerHTML = `<strong>Altura: </strong>${height} m`;
+    $pokeCard.querySelector(
+        ".weight"
+    ).innerHTML = `<strong>Peso: </strong>${weight} kg`;
+}
+
+function formatWeight(weight = 1000) {
+    const convertedToArray = String(weight).split("");
+    let weightFormatted;
+    convertedToArray.splice(convertedToArray.length - 1, 0, ",");
+    weightFormatted = convertedToArray.join("");
+
+    return weightFormatted;
+}
+
+function formatHeight(height = 7) {
+    const convertedToArray = String(height).split("");
+    let heightFormatted;
+    if (convertedToArray.length === 1) {
+        convertedToArray.unshift("0");
+    }
+
+    convertedToArray.splice(convertedToArray.length - 1, 0, ",");
+    heightFormatted = convertedToArray.join("");
+    return heightFormatted;
 }
 
 function handlePokemonImg($pokeCard, pokemon) {
@@ -248,4 +282,49 @@ function getEntries(entries) {
     return pokemonEntry;
 }
 
-function insertPokemonInformation() {}
+// async function getAllPokemons() {
+//     const response = await fetch(
+//         "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0"
+//     );
+//     const allPokemons = await response.json();
+//     const data = { pokemons: [], page: 0, index: 0 };
+//     getNextPagination(allPokemons, data);
+//     getNextPagination(allPokemons, data);
+//     getPreviousPagination(allPokemons, data);
+//     return allPokemons;
+// }
+
+// getAllPokemons();
+
+// function getNextPagination(allPokemons, data) {
+//     const TOTAL_PAGES = 20;
+//     debugger;
+//     const index = data.index;
+//     data.pokemons = [];
+//     let count = 0;
+//     for (let i = index; count < TOTAL_PAGES; i++) {
+//         count++;
+//         const pokemon = allPokemons.results[i];
+//         data.pokemons.push(pokemon);
+//     }
+//     data.page++;
+//     data.index += TOTAL_PAGES;
+//     console.log(data);
+// }
+
+// function getPreviousPagination(allPokemons, data) {
+//     const TOTAL_PAGES = 20;
+//     debugger;
+//     const index = data.index - TOTAL_PAGES * 2;
+//     data.pokemons = [];
+//     let count = 0;
+//     for (let i = index; count < TOTAL_PAGES; i++) {
+//         count++;
+//         const pokemon = allPokemons.results[i];
+//         data.pokemons.push(pokemon);
+//     }
+//     data.page--;
+//     data.index = index;
+//     debugger;
+//     console.log(data);
+// }
