@@ -28,11 +28,16 @@ async function render(URL = "https://pokeapi.co/api/v2/pokemon") {
     const results = pokemonApi.results;
     console.log(results);
     const $tBody = document.querySelector(".table-pokemons");
-    results.forEach(({ name, url }) => {
+    const $col = document.querySelectorAll(".col");
+    results.forEach(({ name, url }, index) => {
         console.log(name, url);
+        // debugger;
         const POKE_ID = getPokemonId(url);
-        insertPokemon(POKE_ID);
-        // $tBody.appendChild(createAndInsertPokemonRow(name, POKE_ID));
+        if (!$col.length) {
+            insertPokemon(POKE_ID);
+        } else {
+            updateRowImg(POKE_ID, index);
+        }
     });
     insertUrlNextList(pokemonApi);
     insertUrlPreviousList(pokemonApi);
@@ -62,6 +67,13 @@ function insertRowImg(src, id) {
     $cardImg.appendChild($img);
 }
 
+async function updateRowImg(id, index) {
+    const $currentImg = document.querySelectorAll(".pokemon-img")[index];
+    const src = await getPokemonDefaultImg(id);
+    $currentImg.src = src;
+    $currentImg.id = id;
+}
+
 function createColImg() {
     const $colImg = document.createElement("div");
     $colImg.classList.add("col");
@@ -82,11 +94,8 @@ function createImg(src, id) {
     const $img = document.createElement("img");
     $img.classList.add("img-thumbnail");
     $img.classList.add("pokemon-img");
-    // $img.classList.add("img-fluid");
     $img.src = src;
     $img.id = id;
-    // $img.width = 1000;
-    // $img.height = 1000;
     $img.setAttribute("data-bs-toggle", "modal");
     $img.setAttribute("data-bs-target", "#pokemonModal");
     return $img;
@@ -168,31 +177,12 @@ function handlePagination(event) {
 
 function nextList(nextUrl) {
     console.log("estoy en next", nextUrl);
-    removeTrElements();
-    removePokemons();
     render(nextUrl);
 }
 
 function previousList(previousUrl) {
     console.log("estoy en previo");
-    removeTrElements();
-    removePokemons();
     render(previousUrl);
-}
-
-function removePokemons() {
-    const $cols = document.querySelectorAll(".col");
-    for (const element of $cols) {
-        element.remove();
-    }
-}
-
-function removeTrElements() {
-    const $trTable = document.querySelectorAll(".table-active");
-
-    $trTable.forEach(($element) => {
-        $element.remove();
-    });
 }
 
 async function handlePokemonBtn(event) {
@@ -209,10 +199,6 @@ async function handlePokemonBtn(event) {
 }
 
 document.querySelector(".row").addEventListener("click", handlePokemonBtn);
-
-function log(text) {
-    console.log(text);
-}
 
 async function insertPokemonData(pokemon) {
     const $pokeCard = document.querySelector(".poke-card");
