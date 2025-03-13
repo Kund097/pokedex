@@ -1,0 +1,12 @@
+img {
+    width: auto;
+    height: auto;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    cursor: pointer;
+}
+
+.col:hover{
+    scale: 1.1;
+    transition: 0.5s;
+}
