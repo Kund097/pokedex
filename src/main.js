@@ -31,7 +31,6 @@ async function render(URL = "https://pokeapi.co/api/v2/pokemon") {
     const $col = document.querySelectorAll(".col");
     results.forEach(({ name, url }, index) => {
         console.log(name, url);
-        // debugger;
         const POKE_ID = getPokemonId(url);
         if (!$col.length) {
             insertPokemon(POKE_ID);
@@ -101,38 +100,38 @@ function createImg(src, id) {
     return $img;
 }
 
-function createAndInsertPokemonRow(name, id) {
-    const { $tr, $thName, $thId, $thButton, $button } = createTableElements();
-    configureButton($button, id);
-    $thName.textContent = name;
-    $thName.scope = "row";
-    $thId.textContent = id;
+// function createAndInsertPokemonRow(name, id) {
+//     const { $tr, $thName, $thId, $thButton, $button } = createTableElements();
+//     configureButton($button, id);
+//     $thName.textContent = name;
+//     $thName.scope = "row";
+//     $thId.textContent = id;
 
-    $tr.id = id;
-    $tr.appendChild($thName);
-    $tr.appendChild($thId);
-    $thButton.appendChild($button);
-    $tr.appendChild($thButton);
-    return $tr;
-}
+//     $tr.id = id;
+//     $tr.appendChild($thName);
+//     $tr.appendChild($thId);
+//     $thButton.appendChild($button);
+//     $tr.appendChild($thButton);
+//     return $tr;
+// }
 
-function createTableElements() {
-    const $tr = document.createElement("tr");
-    const $thName = document.createElement("th");
-    const $thId = document.createElement("th");
-    const $thButton = document.createElement("th");
-    const $button = document.createElement("button");
-    $tr.className = "table-active";
-    return { $tr, $thName, $thId, $thButton, $button };
-}
+// function createTableElements() {
+//     const $tr = document.createElement("tr");
+//     const $thName = document.createElement("th");
+//     const $thId = document.createElement("th");
+//     const $thButton = document.createElement("th");
+//     const $button = document.createElement("button");
+//     $tr.className = "table-active";
+//     return { $tr, $thName, $thId, $thButton, $button };
+// }
 
-function configureButton($button, id) {
-    $button.textContent = "Ver";
-    $button.id = id;
-    $button.className = "btn btn-primary btn-pokemon";
-    $button.setAttribute("data-bs-toggle", "modal");
-    $button.setAttribute("data-bs-target", "#pokemonModal");
-}
+// function configureButton($button, id) {
+//     $button.textContent = "Ver";
+//     $button.id = id;
+//     $button.className = "btn btn-primary btn-pokemon";
+//     $button.setAttribute("data-bs-toggle", "modal");
+//     $button.setAttribute("data-bs-target", "#pokemonModal");
+// }
 
 function getPokemonId(URL) {
     const regEx = new RegExp(/(\d+)\/?$/);
@@ -161,6 +160,7 @@ function insertUrlPreviousList(currentApi) {
 document.querySelectorAll(".page-btn").forEach(($element) => {
     $element.addEventListener("click", handlePagination);
 });
+
 function handlePagination(event) {
     event.preventDefault();
     console.log(event.target);
@@ -188,7 +188,6 @@ function previousList(previousUrl) {
 async function handlePokemonBtn(event) {
     const target = event.target;
     if (target.classList.contains("pokemon-img")) {
-        // debugger;
         console.log("me hiciste click en pokemon img", target);
         const pokemonId = target.id;
         const URL_POKEMON = `https://pokeapi.co/api/v2/pokemon/${pokemonId}`;
@@ -207,6 +206,20 @@ async function insertPokemonData(pokemon) {
     document.querySelector(".modal-title").textContent = pokemon.name;
     insertPokemonEntries($pokeCard, await getPokemonEntry(pokemon.id));
     insertPokemonInformation($pokeCard, pokemon);
+    insertPokemonCry($pokeCard, pokemon);
+}
+
+function insertPokemonCry($pokeCard, pokemon) {
+    const $pokemonCry = $pokeCard.querySelector(".pokemon-cry");
+    $audioElement = createAudioElement();
+    $audioElement.src = pokemon.cries.latest;
+    $pokemonCry.replaceChild($audioElement, $pokemonCry.lastChild);
+}
+
+function createAudioElement() {
+    const $audioElement = document.createElement("audio");
+    $audioElement.setAttribute("controls", "");
+    return $audioElement;
 }
 
 function insertPokemonInformation($pokeCard, pokemon) {
